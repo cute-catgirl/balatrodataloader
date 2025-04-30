@@ -1,0 +1,76 @@
+local json = require("json")
+
+function loadDatapacks(self)
+    print("Loading datapacks...")
+    local folder = "datapacks"
+    print("Loading datapacks from save directory: " .. love.filesystem.getSaveDirectory() .. "/" .. folder)
+
+    -- Create the folder if it doesn't exist
+    if not love.filesystem.getInfo(folder, "directory") then
+        love.filesystem.createDirectory(folder)
+        print("Created datapacks folder at: " .. love.filesystem.getSaveDirectory() .. "/" .. folder)
+    end
+
+    for _, namespace in ipairs(love.filesystem.getDirectoryItems(folder)) do
+        local nsPath = folder .. "/" .. namespace
+        if love.filesystem.getInfo(nsPath, "directory") then
+            print("Found datapack: " .. nsPath)
+            loadDatapack(self, nsPath)
+        end
+    end
+end
+
+function loadDatapack(self, path)
+    print("Loading datapack")
+    -- Load jokers
+    local jokerPath = path .. "/jokers"
+    if love.filesystem.getInfo(jokerPath, "directory") then
+        for _, joker in ipairs(love.filesystem.getDirectoryItems(jokerPath)) do
+            local jokerPath = jokerPath .. "/" .. joker
+            if love.filesystem.getInfo(jokerPath, "file") then
+                local jokerName = string.match(joker, "(.*)%.json")
+                if jokerName then
+                    local jokerData = json.decode(love.filesystem.read(jokerPath))
+                    if jokerData then
+                        loadJoker(self, jokerName, jokerData)
+                    end
+                end
+            end
+        end
+    end
+end
+
+function loadJoker(self, name, data)
+    print("Loading joker")
+    if not self.P_CENTERS then
+        self.P_CENTERS = {}
+    end
+
+    local key = string.gsub(string.lower(name), " ", "_")
+    key = "j_" .. key
+    if self.P_CENTERS[key] then
+        print("Joker " .. name .. " already exists, skipping.")
+        return
+    end
+    
+    -- Count existing jokers
+    local joker_count = 0
+    for k, v in pairs(self.P_CENTERS) do
+        if k:sub(1, 2) == "j_" then
+            joker_count = joker_count + 1
+        end
+    end
+
+    -- Verify data has all required fields
+    if not data.name or not data.rarity or not data.cost then
+        print("Joker " .. name .. " is missing required fields, skipping.")
+        return
+    end
+    
+    -- Create the joker
+    local joker={order = 1,  unlocked = true, start_alerted = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = data.rarity, cost = data.cost, name = data.name, pos = {x=0,y=0}, set = "Joker", effect = "Mult", cost_mult = 1.0, config = {mult = 4}}
+
+    self.P_CENTERS[key] = joker
+
+    print("Loaded joker: " .. name)
+end

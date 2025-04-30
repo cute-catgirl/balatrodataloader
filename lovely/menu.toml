@@ -1,0 +1,51 @@
+[manifest]
+version = "0.0.1"
+priority = 0
+
+[[patches]]
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+pattern = '''local main_menu = nil'''
+position = "after"
+payload = '''local datapacks = nil'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+pattern = '''main_menu = UIBox_button{ label = {localize('b_main_menu')}, button = "go_to_menu", minw = 5}'''
+position = "after"
+payload = '''datapacks = UIBox_button{ id = "datapacks_button", label = {localize('b_datapacks')}, button = "datapacks_button", minw = 5}'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+pattern = '''main_menu,'''
+position = "after"
+payload = '''datapacks,'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+pattern = '''UIBox_button{id = 'collection_button', button = "your_collection", colour = G.C.PALE_GREEN, minw = 3.65, minh = 1.55, label = {localize('b_collection_cap')}, scale = text_scale*1.5, col = true},'''
+position = "after"
+payload = '''UIBox_button{id = 'datapacks_button', button = "datapacks_button", colour = G.C.PALE_GREEN, minw = 3.65, minh = 1.55, label = {localize('b_datapacks_cap')}, scale = text_scale*1.5, col = true},'''
+match_indent = true
+
+[[patches]]
+[patches.copy]
+target = "functions/UI_definitions.lua"
+position = "append"
+sources = [
+    "UI_definitions.lua"
+]
+
+[[patches]]
+[patches.copy]
+target = "functions/button_callbacks.lua"
+position = "append"
+sources = [
+    "button_callbacks.lua"
+]

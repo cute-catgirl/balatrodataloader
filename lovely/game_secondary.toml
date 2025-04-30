@@ -1,0 +1,11 @@
+[manifest]
+version = "0.0.1"
+priority = 2
+
+[[patches]]
+[patches.pattern]
+target = "game.lua"
+pattern = '''self.P_LOCKED = {}'''
+position = "after"
+payload = '''loadDatapacks(self)'''
+match_indent = true
