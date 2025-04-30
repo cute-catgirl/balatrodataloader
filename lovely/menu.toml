@@ -27,14 +27,6 @@ payload = '''datapacks,'''
 match_indent = true
 
 [[patches]]
-[patches.pattern]
-target = "functions/UI_definitions.lua"
-pattern = '''UIBox_button{id = 'collection_button', button = "your_collection", colour = G.C.PALE_GREEN, minw = 3.65, minh = 1.55, label = {localize('b_collection_cap')}, scale = text_scale*1.5, col = true},'''
-position = "after"
-payload = '''UIBox_button{id = 'datapacks_button', button = "datapacks_button", colour = G.C.PALE_GREEN, minw = 3.65, minh = 1.55, label = {localize('b_datapacks_cap')}, scale = text_scale*1.5, col = true},'''
-match_indent = true
-
-[[patches]]
 [patches.copy]
 target = "functions/UI_definitions.lua"
 position = "append"

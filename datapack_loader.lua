@@ -66,11 +66,11 @@ function loadJoker(self, name, data)
         print("Joker " .. name .. " is missing required fields, skipping.")
         return
     end
+
+    print(data.effects)
     
     -- Create the joker
-    local joker={order = 1,  unlocked = true, start_alerted = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = data.rarity, cost = data.cost, name = data.name, pos = {x=0,y=0}, set = "Joker", effect = "Mult", cost_mult = 1.0, config = {mult = 4}}
+    local joker={order = (joker_count + 1), unlocked = true, start_alerted = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = data.rarity, cost = data.cost, name = data.name, pos = {x=0,y=0}, set = "Joker", effect = "", config = {extra = {effects = data.effects or {}}}, data_driven = true}
 
     self.P_CENTERS[key] = joker
-
-    print("Loaded joker: " .. name)
 end

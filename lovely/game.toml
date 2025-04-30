@@ -3,22 +3,6 @@ version = "0.0.1"
 priority = 0
 
 [[patches]]
-[patches.regex]
-target = "game.lua"
-pattern = "^\\s*(j_.*)$"
-position = "at"
-payload = "-- removed"
-match_indent = true
-
-[[patches]]
-[patches.pattern]
-target = "game.lua"
-pattern = '''if replace_card and (G.P_CENTERS.j_blueprint.unlocked) then'''
-position = "at"
-payload = '''if replace_card then'''
-match_indent = true
-
-[[patches]]
 [patches.pattern]
 target = "card.lua"
 pattern = '''function Card:set_ability(center, initial, delay_sprites)'''
@@ -43,9 +27,43 @@ payload = "if not _center then return end"
 match_indent = true
 
 [[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = '''effect = center.effect,'''
+position = "after"
+payload = "data_driven = center.data_driven,"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = '''if self.ability.name == 'Loyalty Card' then'''
+position = "before"
+payload = '''if self.ability.data_driven then
+    return calculate_data_driven_joker(self.ability.extra.effects)
+end'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = '''if self.ability.set == "Joker" and not self.debuff then'''
+position = "after"
+payload = "print(self.ability.data_driven)"
+match_indent = true
+
+[[patches]]
 [patches.copy]
 target = "game.lua"
 position = "append"
 sources = [
     "datapack_loader.lua"
+]
+
+[[patches]]
+[patches.copy]
+target = "card.lua"
+position = "append"
+sources = [
+    "joker_effects.lua"
 ]
