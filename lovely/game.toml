@@ -62,6 +62,20 @@ match_indent = true
 
 
 [[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = '''self.children.center = Sprite(self.T.x, self.T.y, self.T.w, self.T.h, G.ASSET_ATLAS[_center.set], self.config.center.pos)'''
+position = "at"
+payload = '''if _center.set == 'Joker' and _center.custom_texture then
+    print("Custom texture found")
+    self.children.center = Sprite(self.T.x, self.T.y, self.T.w, self.T.h, _center.custom_texture, self.config.center.pos)
+else
+    print("No custom texture found")
+    self.children.center = Sprite(self.T.x, self.T.y, self.T.w, self.T.h, G.ASSET_ATLAS[_center.set], self.config.center.pos)
+end'''
+match_indent = true
+
+[[patches]]
 [patches.copy]
 target = "game.lua"
 position = "append"

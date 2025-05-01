@@ -23,7 +23,7 @@ end
 function loadDatapack(self, path)
     print("Loading datapack")
     -- Load jokers
-    local jokerPath = path .. "/jokers"
+    local jokerPath = path .. "/data/jokers"
     if love.filesystem.getInfo(jokerPath, "directory") then
         for _, joker in ipairs(love.filesystem.getDirectoryItems(jokerPath)) do
             local jokerPath = jokerPath .. "/" .. joker
@@ -32,7 +32,7 @@ function loadDatapack(self, path)
                 if jokerName then
                     local jokerData = json.decode(love.filesystem.read(jokerPath))
                     if jokerData then
-                        loadJoker(self, jokerName, jokerData)
+                        loadJoker(self, jokerName, jokerData, path)
                     end
                 end
             end
@@ -40,7 +40,7 @@ function loadDatapack(self, path)
     end
 end
 
-function loadJoker(self, name, data)
+function loadJoker(self, name, data, path)
     print("Loading joker")
     if not self.P_CENTERS then
         self.P_CENTERS = {}
@@ -67,10 +67,40 @@ function loadJoker(self, name, data)
         return
     end
 
+    local texture_img = nil
+    if data.texture then
+        local texture_path = path .. "/assets/jokers/" .. data.texture
+        if love.filesystem.getInfo(texture_path, "file") then
+            texture_img = {
+                image = love.graphics.newImage(love.filesystem.newFileData(love.filesystem.read(texture_path), texture_path)),
+                px = 142, -- width of your joker image
+                py = 190  -- height of your joker image
+            }
+        else
+            print("Texture not found: " .. texture_path)
+        end
+    end
+
     print(data.effects)
     
     -- Create the joker
-    local joker={order = (joker_count + 1), unlocked = true, start_alerted = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = data.rarity, cost = data.cost, name = data.name, pos = {x=0,y=0}, set = "Joker", effect = "", config = {extra = {effects = data.effects or {}}}, data_driven = true, description = data.description or ""}
-
+    local joker={
+        order = (joker_count + 1),
+        unlocked = true,
+        start_alerted = true,
+        discovered = true,
+        blueprint_compat = data.blueprint_compatible or true,
+        perishable_compat = data.perishable_compatible or true,
+        eternal_compat = data.eternal_compatible or true,
+        rarity = data.rarity,
+        cost = data.cost,
+        name = data.name,
+        pos = {x=0,y=0},
+        set = "Joker",
+        effect = "",
+        config = {extra = {effects = data.effects or {}}},
+        data_driven = true, description = data.description or "",
+        custom_texture = texture_img
+    }
     self.P_CENTERS[key] = joker
 end
