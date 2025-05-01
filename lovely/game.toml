@@ -54,76 +54,10 @@ match_indent = true
 
 [[patches]]
 [patches.pattern]
-target = "functions/common_events.lua"
-pattern = '''full_UI_table.name = localize{type = 'name', set = _c.set, key = _c.key, nodes = full_UI_table.name}'''
-position = "at"
-payload = '''
-if _c.data_driven then
-    full_UI_table.name = {
-        {
-            n = G.UIT.O,
-            config = {
-                object = DynaText({
-                    string = {_c.name},
-                    colours = {{1,1,1,1}},
-                    bump = true,
-                    silent = true,
-                    pop_in = 0,
-                    pop_in_rate = 4,
-                    maxw = 5,
-                    shadow = true,
-                    y_offset = -0.6,
-                    spacing = math.max(0, 0.32*(17 - #_c.name)),
-                    scale = (0.55 - 0.004*#_c.name)
-                })
-            }
-        }
-    }
-else
-    full_UI_table.name = localize{type = 'name', set = _c.set, key = _c.key, nodes = full_UI_table.name}
-end
-'''
-match_indent = true
-
-[[patches]]
-[patches.pattern]
-target = "functions/common_events.lua"
-pattern = '''local desc_nodes = (not full_UI_table.name and full_UI_table.main) or full_UI_table.info'''
-position = "before"
-payload = '''print(full_UI_table.name or 'no name')'''
-match_indent = true
-
-[[patches]]
-[patches.pattern]
-target = "functions/common_events.lua"
-pattern = '''full_UI_table.name = localize{type = 'name', set = 'Other', key = 'undiscovered_'..(string.lower(_c.set)), name_nodes = {}}'''
+target = "game.lua"
+pattern = '''self.localization = assert(loadstring(love.filesystem.read('localization/'..G.SETTINGS.language..'.lua')))()'''
 position = "after"
-payload = '''
-if _c.data_driven then
-    full_UI_table.name = {
-        {
-            n = G.UIT.O,
-            config = {
-                object = DynaText({
-                    string = {_c.name},
-                    colours = {{1,1,1,1}},
-                    bump = true,
-                    silent = true,
-                    pop_in = 0,
-                    pop_in_rate = 4,
-                    maxw = 5,
-                    shadow = true,
-                    y_offset = -0.6,
-                    spacing = math.max(0, 0.32*(17 - #_c.name)),
-                    scale = (0.55 - 0.004*#_c.name)
-                })
-            }
-        }
-    }
-else
-    full_UI_table.name = localize{type = 'name', set = _c.set, key = _c.key, nodes = full_UI_table.name}
-end
-'''
+payload = '''self.localization = add_custom_localization(self.localization)'''
 match_indent = true
 
 
@@ -132,7 +66,8 @@ match_indent = true
 target = "game.lua"
 position = "append"
 sources = [
-    "datapack_loader.lua"
+    "datapack_loader.lua",
+    "add_custom_localization.lua"
 ]
 
 [[patches]]

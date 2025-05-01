@@ -7,5 +7,9 @@ priority = 2
 target = "game.lua"
 pattern = '''self.P_LOCKED = {}'''
 position = "after"
-payload = '''loadDatapacks(self)'''
+payload = '''
+loadDatapacks(self)
+self.localization = add_custom_localization(self.localization)
+init_localization()
+'''
 match_indent = true

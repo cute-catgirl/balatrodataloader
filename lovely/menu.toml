@@ -41,3 +41,9 @@ position = "append"
 sources = [
     "button_callbacks.lua"
 ]
+
+[[patches]]
+[patches.copy]
+target = "localization/en-us.lua"
+position = "append"
+sources = ["add_custom_localization.lua"]

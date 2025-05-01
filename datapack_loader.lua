@@ -70,7 +70,7 @@ function loadJoker(self, name, data)
     print(data.effects)
     
     -- Create the joker
-    local joker={order = (joker_count + 1), unlocked = true, start_alerted = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = data.rarity, cost = data.cost, name = data.name, pos = {x=0,y=0}, set = "Joker", effect = "", config = {extra = {effects = data.effects or {}}}, data_driven = true}
+    local joker={order = (joker_count + 1), unlocked = true, start_alerted = true, discovered = true, blueprint_compat = true, perishable_compat = true, eternal_compat = true, rarity = data.rarity, cost = data.cost, name = data.name, pos = {x=0,y=0}, set = "Joker", effect = "", config = {extra = {effects = data.effects or {}}}, data_driven = true, description = data.description or ""}
 
     self.P_CENTERS[key] = joker
 end
