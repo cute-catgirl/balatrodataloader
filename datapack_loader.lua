@@ -100,7 +100,7 @@ function loadJoker(self, name, data, path)
         effect = "",
         config = {extra = {effects = data.effects or {}}},
         data_driven = true, description = data.description or "",
-        custom_texture = texture_img
+        custom_texture = texture_img or ""
     }
     self.P_CENTERS[key] = joker
 end

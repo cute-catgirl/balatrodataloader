@@ -27,6 +27,16 @@ payload = '''datapacks,'''
 match_indent = true
 
 [[patches]]
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+pattern = '''{n=G.UIT.C, config={align = "cm", minw = 2.5}, nodes={}}'''
+position = "at"
+payload = '''{n=G.UIT.C, config={align = "cm", minw = 2.5}, nodes={
+   create_UIBox_datapacks_icon_button()
+  }},'''
+match_indent = true
+
+[[patches]]
 [patches.copy]
 target = "functions/UI_definitions.lua"
 position = "append"
