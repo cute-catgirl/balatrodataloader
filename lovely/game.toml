@@ -46,20 +46,48 @@ match_indent = true
 
 [[patches]]
 [patches.pattern]
-target = "card.lua"
-pattern = '''if self.ability.set == "Joker" and not self.debuff then'''
-position = "after"
-payload = "print(self.ability.data_driven)"
-match_indent = true
-
-[[patches]]
-[patches.pattern]
 target = "game.lua"
 pattern = '''self.localization = assert(loadstring(love.filesystem.read('localization/'..G.SETTINGS.language..'.lua')))()'''
 position = "after"
 payload = '''self.localization = add_custom_localization(self.localization)'''
 match_indent = true
 
+[[patches]]
+[patches.pattern]
+target = "game.lua"
+pattern = '''banned_keys = {},'''
+position = "after"
+payload = '''datapacks = {},'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "game.lua"
+pattern = '''self.GAME.stake = args.stake or self.GAME.stake or 1'''
+position = "after"
+payload = '''self.GAME.datapacks = args.datapacks or self.GAME.datapacks or {}'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "functions/button_callbacks.lua"
+pattern = '''local _stake = G.forced_stake or G.PROFILES[G.SETTINGS.profile].MEMORY.stake or 1'''
+position = "after"
+payload = '''
+local _datapacks = {}
+for k, v in pairs(G.ENABLED_DATAPACKS or {}) do
+    if v then table.insert(_datapacks, k) end
+end
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "functions/button_callbacks.lua"
+pattern = '''G.FUNCS.start_run(e, {stake = _stake, seed = _seed, challenge = _challenge})'''
+position = "at"
+payload = '''G.FUNCS.start_run(e, {stake = _stake, seed = _seed, challenge = _challenge, datapacks = _datapacks})'''
+match_indent = true
 
 [[patches]]
 [patches.pattern]
@@ -67,12 +95,29 @@ target = "card.lua"
 pattern = '''self.children.center = Sprite(self.T.x, self.T.y, self.T.w, self.T.h, G.ASSET_ATLAS[_center.set], self.config.center.pos)'''
 position = "at"
 payload = '''if _center.set == 'Joker' and _center.custom_texture and _center.custom_texture ~= "" then
-    print("Custom texture found")
     self.children.center = Sprite(self.T.x, self.T.y, self.T.w, self.T.h, _center.custom_texture, self.config.center.pos)
 else
-    print("No custom texture found")
     self.children.center = Sprite(self.T.x, self.T.y, self.T.w, self.T.h, G.ASSET_ATLAS[_center.set], self.config.center.pos)
 end'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = '''if _type == 'Enhanced' then'''
+position = "at"
+payload = '''
+local contains = function(table, value)
+    for _, val in ipairs(G.GAME.datapacks) do
+        if val == v.datapack then
+            return true
+        end
+    end
+    return false
+end
+if _type == 'Joker' and v.datapack ~= nil and not contains(G.GAME.datapacks or {}, v.datapack) then
+    add = false
+elseif _type == 'Enhanced' then'''
 match_indent = true
 
 [[patches]]

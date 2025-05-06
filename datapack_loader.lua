@@ -56,7 +56,7 @@ function loadDatapack(self, path)
                 if jokerName then
                     local jokerData = json.decode(love.filesystem.read(jokerPath))
                     if jokerData then
-                        loadJoker(self, jokerName, jokerData, path)
+                        loadJoker(self, jokerName, jokerData, path, G.DATAPACKS[#G.DATAPACKS])
                     end
                 end
             end
@@ -64,7 +64,7 @@ function loadDatapack(self, path)
     end
 end
 
-function loadJoker(self, name, data, path)
+function loadJoker(self, name, data, path, pack)
     print("Loading joker")
     if not self.P_CENTERS then
         self.P_CENTERS = {}
@@ -123,8 +123,10 @@ function loadJoker(self, name, data, path)
         set = "Joker",
         effect = "",
         config = {extra = {effects = data.effects or {}}},
-        data_driven = true, description = data.description or "",
-        custom_texture = texture_img or ""
+        data_driven = true,
+        description = data.description or "",
+        custom_texture = texture_img or "",
+        datapack = pack.name
     }
     self.P_CENTERS[key] = joker
 end

@@ -25,18 +25,21 @@ function create_UIBox_datapack_item(pack)
             { n = G.UIT.T, config = { text = pack.name, align = "cm", colour = G.C.UI.TEXT_LIGHT, scale = 0.5 } },
             create_toggle({
                 label = '',
-                ref_table = modInfo,
-                ref_value = 'should_enable',
+                ref_table = G.ENABLED_DATAPACKS,
+                ref_value = pack.name,
                 col = true,
                 w = 0,
                 h = 0.5,
             }),
-    }}
+        }
+    }
 end
 
 function create_datapack_list(packs)
     local list = {}
+    G.ENABLED_DATAPACKS = G.ENABLED_DATAPACKS or {}
     for i, pack in ipairs(packs) do
+        pack.should_enable = G.ENABLED_DATAPACKS[pack.name] or false
         local pack_button = create_UIBox_datapack_item(pack)
         table.insert(list, pack_button)
     end
