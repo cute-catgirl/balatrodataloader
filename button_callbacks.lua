@@ -1,4 +1,7 @@
 G.FUNCS.datapacks_button = function()
-    -- do nothing for now
-    return
+    -- open datapacks menu
+    local packs = G.DATAPACKS or {}
+    G.FUNCS.overlay_menu{
+        definition = create_datapacks_menu(packs)
+    }
 end

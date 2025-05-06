@@ -21,7 +21,31 @@ function loadDatapacks(self)
 end
 
 function loadDatapack(self, path)
-    print("Loading datapack")
+    print("Loading datapack...")
+    -- Get the metadata
+    local metadataPath = path .. "/pack.json"
+    if love.filesystem.getInfo(metadataPath, "file") then
+        local metadata = json.decode(love.filesystem.read(metadataPath))
+        if metadata and metadata.name then
+            print("Datapack name: " .. metadata.name)
+            G.DATAPACKS = G.DATAPACKS or {}
+            table.insert(G.DATAPACKS, {
+                name = metadata.name,
+                description = metadata.description or "",
+                author = metadata.author or "",
+                version = metadata.version or "1.0",
+                path = path,
+            })
+        else
+            print("Invalid pack.json format in " .. path)
+            -- Do not load the datapack if it doesn't have a valid pack.json
+            return
+        end
+    else
+        print("No pack.json found in " .. path)
+        -- Do not load the datapack if it doesn't have a pack.json
+        return
+    end
     -- Load jokers
     local jokerPath = path .. "/data/jokers"
     if love.filesystem.getInfo(jokerPath, "directory") then
