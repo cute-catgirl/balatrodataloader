@@ -37,10 +37,12 @@ match_indent = true
 [[patches]]
 [patches.pattern]
 target = "card.lua"
-pattern = '''if self.ability.name == 'Loyalty Card' then'''
+pattern = '''if self.ability.name ~= 'Seeing Double' and self.ability.x_mult > 1 and (self.ability.type == '' or next(context.poker_hands[self.ability.type])) then'''
 position = "before"
 payload = '''if self.ability.data_driven then
-    return calculate_data_driven_joker(self.ability.extra.effects)
+    local seed = pseudoseed(self.ability.name or "data_driven")
+    print("Seed:", seed)
+    return calculate_data_driven_joker(self.ability.extra.on_play, seed)
 end'''
 match_indent = true
 

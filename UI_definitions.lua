@@ -1,5 +1,5 @@
 function create_UIBox_datapacks_icon_button(args)
-    local texture_path = "Mods/balatrodataloader/assets/datapacks_button.png"
+    local texture_path = "Mods/data_loader/assets/datapacks_button.png"
     local texture_img = nil
     print(texture_path)
     if love.filesystem.getInfo(texture_path, "file") then

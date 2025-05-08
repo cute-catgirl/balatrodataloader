@@ -105,7 +105,7 @@ function loadJoker(self, name, data, path, pack)
         end
     end
 
-    print(data.effects)
+    print(data.on_play)
     
     -- Create the joker
     local joker={
@@ -122,7 +122,7 @@ function loadJoker(self, name, data, path, pack)
         pos = {x=0,y=0},
         set = "Joker",
         effect = "",
-        config = {extra = {effects = data.effects or {}}},
+        config = {extra = {on_play = data.on_play or {}}},
         data_driven = true,
         description = data.description or "",
         custom_texture = texture_img or "",
