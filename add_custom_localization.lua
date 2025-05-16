@@ -9,20 +9,15 @@ function add_custom_localization(localization)
     if G and G.P_CENTERS then
         for key, item in pairs(G.P_CENTERS) do
             if key:sub(1, 2) == "j_" and item.data_driven then
-                print(key)
                 localization["descriptions"]["Joker"][key] = {
                     name = item.name,
-                    text = {
-                        item.description
-                    },
+                    text = item.description,
                 }
             elseif key:sub(1, 2) == "c_" and item.data_driven then
                 print(key)
                 localization["descriptions"]["Tarot"][key] = {
                     name = item.name,
-                    text = {
-                        item.description
-                    },
+                    text = item.description,
                 }
             end
         end

@@ -125,6 +125,13 @@ function loadJoker(self, name, data, path, pack)
     end
 
     print(data.on_play)
+
+    -- If description is a string, convert it to a table
+    if type(data.description) == "string" then
+        data.description = {
+            data.description
+        }
+    end
     
     -- Create the joker
     local joker={
@@ -143,7 +150,7 @@ function loadJoker(self, name, data, path, pack)
         effect = "",
         config = {extra = {on_play = data.on_play or {}}},
         data_driven = true,
-        description = data.description or "",
+        description = data.description or {""},
         custom_texture = texture_img or "",
         datapack = pack.name
     }
@@ -190,6 +197,14 @@ function loadTarot(self, name, data, path, pack)
             print("Texture not found: " .. texture_path)
         end
     end
+
+    -- If description is a string, convert it to a table
+    if type(data.description) == "string" then
+        data.description = {
+            data.description
+        }
+    end
+
     -- Create the tarot
     local tarot = {
         order = (tarot_count + 1),
@@ -202,7 +217,7 @@ function loadTarot(self, name, data, path, pack)
         effect = "",
         cost_mult = 1.0,
         config = {},
-        description = data.description or "",
+        description = data.description or {""},
         custom_texture = texture_img or "",
         data_driven = true,
         datapack = pack.name,
