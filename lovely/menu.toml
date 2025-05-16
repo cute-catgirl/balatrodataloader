@@ -37,6 +37,20 @@ payload = '''{n=G.UIT.C, config={align = "cm", minw = 2.5}, nodes={
 match_indent = true
 
 [[patches]]
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+pattern = '''local tarot_options = {}
+for i = 1, math.floor(#G.P_CENTER_POOLS.Tarot/11) do
+table.insert(tarot_options, localize('k_page')..' '..tostring(i)..'/'..tostring(math.floor(#G.P_CENTER_POOLS.Tarot/11)))
+end'''
+position = "at"
+payload = '''local tarot_options = {}
+for i = 1, math.ceil(#G.P_CENTER_POOLS.Tarot/11) do
+table.insert(tarot_options, localize('k_page')..' '..tostring(i)..'/'..tostring(math.ceil(#G.P_CENTER_POOLS.Tarot/11)))
+end'''
+match_indent = true
+
+[[patches]]
 [patches.copy]
 target = "functions/UI_definitions.lua"
 position = "append"

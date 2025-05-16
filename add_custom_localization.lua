@@ -7,13 +7,21 @@ function add_custom_localization(localization)
     localization["misc"]["dictionary"]["b_datapacks_small"] = "D"
     
     if G and G.P_CENTERS then
-        for key, joker in pairs(G.P_CENTERS) do
-            if key:sub(1, 2) == "j_" and joker.data_driven then
+        for key, item in pairs(G.P_CENTERS) do
+            if key:sub(1, 2) == "j_" and item.data_driven then
                 print(key)
                 localization["descriptions"]["Joker"][key] = {
-                    name = joker.name,
+                    name = item.name,
                     text = {
-                        joker.description
+                        item.description
+                    },
+                }
+            elseif key:sub(1, 2) == "c_" and item.data_driven then
+                print(key)
+                localization["descriptions"]["Tarot"][key] = {
+                    name = item.name,
+                    text = {
+                        item.description
                     },
                 }
             end
