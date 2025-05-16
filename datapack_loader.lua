@@ -30,6 +30,7 @@ function loadDatapack(self, path)
             print("Datapack name: " .. metadata.name)
             G.DATAPACKS = G.DATAPACKS or {}
             table.insert(G.DATAPACKS, {
+                id = string.gsub(string.lower(metadata.name), " ", "_"),
                 name = metadata.name,
                 description = metadata.description or "",
                 author = metadata.author or "",
@@ -88,11 +89,12 @@ function loadJoker(self, name, data, path, pack)
     end
 
     local key = string.gsub(string.lower(name), " ", "_")
-    key = "j_" .. key
+    key = "j_" .. pack.id .. "_" .. key
     if self.P_CENTERS[key] then
         print("Joker " .. name .. " already exists, skipping.")
         return
     end
+    print("Joker key: " .. key)
     
     -- Count existing jokers
     local joker_count = 0
@@ -114,8 +116,8 @@ function loadJoker(self, name, data, path, pack)
         if love.filesystem.getInfo(texture_path, "file") then
             texture_img = {
                 image = love.graphics.newImage(love.filesystem.newFileData(love.filesystem.read(texture_path), texture_path)),
-                px = 142, -- width of your joker image
-                py = 190  -- height of your joker image
+                px = 142,
+                py = 190
             }
         else
             print("Texture not found: " .. texture_path)
@@ -154,7 +156,7 @@ function loadTarot(self, name, data, path, pack)
         self.P_CENTERS = {}
     end
     local key = string.gsub(string.lower(name), " ", "_")
-    key = "c_" .. key
+    key = "c_" .. pack.id .. "_" .. key
     if self.P_CENTERS[key] then
         print("Tarot " .. name .. " already exists, skipping.")
         return
@@ -181,8 +183,8 @@ function loadTarot(self, name, data, path, pack)
         if love.filesystem.getInfo(texture_path, "file") then
             texture_img = {
                 image = love.graphics.newImage(love.filesystem.newFileData(love.filesystem.read(texture_path), texture_path)),
-                px = 126, -- width of your tarot image
-                py = 186  -- height of your tarot image
+                px = 126,
+                py = 186
             }
         else
             print("Texture not found: " .. texture_path)
