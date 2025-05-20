@@ -22,15 +22,20 @@ function create_UIBox_datapack_item(pack)
         n = G.UIT.R,
         config = { padding = 0, align = "cm" },
         nodes = {
-            { n = G.UIT.T, config = { text = pack.name, align = "cm", colour = G.C.UI.TEXT_LIGHT, scale = 0.5 } },
-            create_toggle({
-                label = '',
-                ref_table = G.ENABLED_DATAPACKS,
-                ref_value = pack.name,
-                col = true,
-                w = 0,
-                h = 0.5,
-            }),
+            {n = G.UIT.R, config={align = "cm", padding = 0.1, r = 0.1, colour = G.C.BLACK, emboss = 0.05, minw = 6, minh = 1 }, nodes = {
+                {n = G.UIT.C, config = { align = "cl", padding = 0.1, r = 0.1, colour = G.C.RED, emboss = 0.05 }, nodes = {
+                    { n = G.UIT.T, config = { text = pack.name, align = "cm", colour = G.C.UI.TEXT_LIGHT, scale = 0.5 } }
+                }},
+                create_toggle({
+                    label = '',
+                    ref_table = G.ENABLED_DATAPACKS,
+                    ref_value = pack.name,
+                    col = true,
+                    w = 0,
+                    h = 0.5,
+                    align = "cr"
+                })
+            }}
         }
     }
 end
@@ -43,7 +48,7 @@ function create_datapack_list(packs)
         local pack_button = create_UIBox_datapack_item(pack)
         table.insert(list, pack_button)
     end
-    return {n=G.UIT.C, config={align = "cm", padding = 0, draw_layer = 1, minw = 4}, nodes=list}
+    return {n=G.UIT.C, config={align = "cm", padding = 0.1, draw_layer = 1}, nodes=list}
 end
 
 function create_datapacks_menu(packs)
@@ -53,9 +58,7 @@ function create_datapacks_menu(packs)
         back_func = "setup_run",
         contents = {
             {n = G.UIT.C, config={align = "cm", padding = 0}, nodes = {
-                {n = G.UIT.R, config={align = "cm", padding = 0}, nodes = {
-                    datapack_list
-                }},
+                datapack_list
             }},
         }
     }))
