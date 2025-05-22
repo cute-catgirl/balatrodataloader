@@ -1,6 +1,7 @@
 local json = require("json")
 
 function loadDatapacks(self)
+    G.DATAPACKS = {}
     print("Loading datapacks...")
     local folder = "datapacks"
     print("Loading datapacks from save directory: " .. love.filesystem.getSaveDirectory() .. "/" .. folder)
@@ -28,25 +29,33 @@ function loadDatapack(self, path)
         local metadata = json.decode(love.filesystem.read(metadataPath))
         if metadata and metadata.name then
             print("Datapack name: " .. metadata.name)
-            G.DATAPACKS = G.DATAPACKS or {}
-            table.insert(G.DATAPACKS, {
-                id = string.gsub(string.lower(metadata.name), " ", "_"),
-                name = metadata.name,
-                description = metadata.description or "",
-                author = metadata.author or "",
-                version = metadata.version or "1.0",
-                path = path,
-            })
+            local pack = addDatapack(metadata, path)
+            -- Do not load contents yet!
         else
             print("Invalid pack.json format in " .. path)
-            -- Do not load the datapack if it doesn't have a valid pack.json
             return
         end
     else
         print("No pack.json found in " .. path)
-        -- Do not load the datapack if it doesn't have a pack.json
         return
     end
+end
+
+function addDatapack(metadata, path)
+    G.DATAPACKS = G.DATAPACKS or {}
+    local pack = {
+        id = string.gsub(string.lower(metadata.name), " ", "_"),
+        name = metadata.name,
+        description = metadata.description or "",
+        author = metadata.author or "",
+        version = metadata.version or "1.0",
+        path = path,
+    }
+    G.DATAPACKS[pack.id] = pack
+    return G.DATAPACKS[#G.DATAPACKS]
+end
+
+function loadDatapackContents(self, path, pack)
     -- Load jokers
     local jokerPath = path .. "/data/jokers"
     if love.filesystem.getInfo(jokerPath, "directory") then
@@ -57,7 +66,7 @@ function loadDatapack(self, path)
                 if jokerName then
                     local jokerData = json.decode(love.filesystem.read(jokerPath))
                     if jokerData then
-                        loadJoker(self, jokerName, jokerData, path, G.DATAPACKS[#G.DATAPACKS])
+                        loadJoker(self, jokerName, jokerData, path, pack)
                     end
                 end
             end
@@ -74,7 +83,7 @@ function loadDatapack(self, path)
                 if tarotName then
                     local tarotData = json.decode(love.filesystem.read(tarotPath))
                     if tarotData then
-                        loadTarot(self, tarotName, tarotData, path, G.DATAPACKS[#G.DATAPACKS])
+                        loadTarot(self, tarotName, tarotData, path, pack)
                     end
                 end
             end

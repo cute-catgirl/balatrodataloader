@@ -5,11 +5,36 @@ priority = 2
 [[patches]]
 [patches.pattern]
 target = "game.lua"
-pattern = '''self.P_LOCKED = {}'''
-position = "after"
+pattern = '''self:load_profile(G.SETTINGS.profile or 1)'''
+position = "before"
 payload = '''
 loadDatapacks(self)
+'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "game.lua"
+pattern = '''self.localization = assert(loadstring(love.filesystem.read('localization/'..G.SETTINGS.language..'.lua')))()'''
+position = "after"
+payload = '''
 self.localization = add_custom_localization(self.localization)
 init_localization()
 '''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "game.lua"
+pattern = '''self.P_LOCKED = {}'''
+position = "after"
+payload = '''local profile = G.PROFILES[G.SETTINGS.profile]
+local profileDatapacks = profile.datapacks or {}
+if profileDatapacks then
+    print (#profileDatapacks)
+    for i, v in ipairs(profileDatapacks) do
+        local datapack = G.DATAPACKS[v]
+        loadDatapackContents(self, datapack.path, datapack)
+    end
+end'''
 match_indent = true
