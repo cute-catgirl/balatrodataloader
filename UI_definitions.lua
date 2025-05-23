@@ -18,6 +18,7 @@ function create_UIBox_datapacks_icon_button(args)
 end
 
 function create_UIBox_datapack_item(pack)
+    print("uibox id: " .. pack.id)
     return {
         n = G.UIT.R,
         config = { padding = 0, align = "cm" },
@@ -28,8 +29,8 @@ function create_UIBox_datapack_item(pack)
                 }},
                 create_toggle({
                     label = '',
-                    ref_table = G.ENABLED_DATAPACKS,
-                    ref_value = pack.name,
+                    ref_table = G.TEMP_DATAPACKS,
+                    ref_value = pack.id,
                     col = true,
                     w = 0,
                     h = 0.5,
@@ -41,24 +42,49 @@ function create_UIBox_datapack_item(pack)
 end
 
 function create_datapack_list(packs)
+    print("Creating datapack list")
     local list = {}
-    G.ENABLED_DATAPACKS = G.ENABLED_DATAPACKS or {}
-    for i, pack in ipairs(packs) do
-        pack.should_enable = G.ENABLED_DATAPACKS[pack.name] or false
+    G.TEMP_DATAPACKS = {}
+
+    if not G.PROFILES[G.focused_profile] then
+        print("No focused profile")
+        return nil
+    end
+
+    if not G.PROFILES[G.focused_profile].datapacks then
+        print("nope!")
+        G.PROFILES[G.focused_profile].datapacks = {}
+    end
+    
+    print("Iterating through packs")
+    -- Iterate through packs which is a table with keys
+    for id, pack in pairs(packs) do
+        print("Pack ID: " .. id)
+        if G.PROFILES[G.focused_profile].datapacks[id] and G.PROFILES[G.focused_profile].datapacks[id] == true then
+            print("true!")
+            G.TEMP_DATAPACKS[id] = true
+        else
+            print("false!")
+            G.TEMP_DATAPACKS[id] = false
+        end
         local pack_button = create_UIBox_datapack_item(pack)
         table.insert(list, pack_button)
     end
-    return {n=G.UIT.C, config={align = "cm", padding = 0.1, draw_layer = 1}, nodes=list}
+    
+    return {n=G.UIT.R, config={align = "cm", padding = 0.1, draw_layer = 1}, nodes=list}
 end
 
 function create_datapacks_menu(packs)
     local datapack_list = create_datapack_list(packs)
     return (create_UIBox_generic_options({
         padding = 0,
-        back_func = "setup_run",
+        back_func = "profile_select",
         contents = {
             {n = G.UIT.C, config={align = "cm", padding = 0}, nodes = {
-                datapack_list
+                datapack_list,
+                { n = G.UIT.R, config={align = "cm", padding = 0.1, r = 0.1, colour = G.C.RED, shadow = true, hover = true, button = "update_packs" }, nodes = {
+                        { n = G.UIT.T, config = { text = "Save", align = "cm", colour = G.C.UI.TEXT_LIGHT, scale = 0.5 } }
+                }},
             }},
         }
     }))

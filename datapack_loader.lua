@@ -52,7 +52,7 @@ function addDatapack(metadata, path)
         path = path,
     }
     G.DATAPACKS[pack.id] = pack
-    return G.DATAPACKS[#G.DATAPACKS]
+    return pack
 end
 
 function loadDatapackContents(self, path, pack)

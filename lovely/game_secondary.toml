@@ -28,13 +28,21 @@ match_indent = true
 target = "game.lua"
 pattern = '''self.P_LOCKED = {}'''
 position = "after"
-payload = '''local profile = G.PROFILES[G.SETTINGS.profile]
-local profileDatapacks = profile.datapacks or {}
-if profileDatapacks then
-    print (#profileDatapacks)
-    for i, v in ipairs(profileDatapacks) do
-        local datapack = G.DATAPACKS[v]
-        loadDatapackContents(self, datapack.path, datapack)
+payload = '''
+if G.PROFILES[G.SETTINGS.profile] and G.PROFILES[G.SETTINGS.profile].datapacks then
+    print(G.SETTINGS.profile)
+    print(G.PROFILES[G.SETTINGS.profile].datapacks["example_pack"])
+    for id, should_load in pairs(G.PROFILES[G.SETTINGS.profile].datapacks) do
+        if should_load then
+            local datapack = G.DATAPACKS[id]
+            if datapack then
+                loadDatapackContents(self, datapack.path, datapack)
+            else
+                print("No datapack found: " .. id)
+            end
+        end
     end
+    self.localization = add_custom_localization(self.localization)
+    init_localization()
 end'''
 match_indent = true
