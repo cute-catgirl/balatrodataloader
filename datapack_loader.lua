@@ -147,7 +147,7 @@ function loadJoker(self, name, data, path, pack)
         order = (joker_count + 1),
         unlocked = true,
         start_alerted = true,
-        discovered = true,
+        discovered = data.start_discovered or false,
         blueprint_compat = data.blueprint_compatible or true,
         perishable_compat = data.perishable_compatible or true,
         eternal_compat = data.eternal_compatible or true,
@@ -217,7 +217,7 @@ function loadTarot(self, name, data, path, pack)
     -- Create the tarot
     local tarot = {
         order = (tarot_count + 1),
-        discovered = true,
+        discovered = data.start_discovered or false,
         cost = data.cost,
         consumeable = true,
         name = data.name,
