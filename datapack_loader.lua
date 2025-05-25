@@ -157,7 +157,11 @@ function loadJoker(self, name, data, path, pack)
         pos = {x=0,y=0},
         set = "Joker",
         effect = "",
-        config = {extra = {on_play = data.on_play or {}}},
+        config = {extra = {
+            on_play = data.on_play or {},
+            on_obtain = data.on_obtain or {},
+            on_remove = data.on_remove or {},
+        }},
         data_driven = true,
         description = data.description or {""},
         custom_texture = texture_img or "",

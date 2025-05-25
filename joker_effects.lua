@@ -54,17 +54,17 @@ function calculate_data_driven_joker(effects, seed, context)
                 val = tonumber(effect.value)
             end
             
-            if effect.type == "add_mult" then
+            if effect.type == "add_mult" and context == "hand_played" then
                 return_value.mult_mod = (return_value.mult_mod or 0) + val
                 return_value.message = localize{type='variable',key='a_mult',vars={val}}
                 return_value.colour = G.C.MULT
                 effect_count = effect_count + 1
-            elseif effect.type == "mult_mult" then
+            elseif effect.type == "mult_mult" and context == "hand_played" then
                 return_value.Xmult_mod = (return_value.Xmult_mod or 0) + val
                 return_value.message = localize{type='variable',key='a_xmult',vars={val}}
                 return_value.colour = G.C.MULT
                 effect_count = effect_count + 1
-            elseif effect.type == "add_chips" then
+            elseif effect.type == "add_chips" and context == "hand_played" then
                 return_value.chip_mod = (return_value.chip_mod or 0) + val
                 return_value.message = localize{type='variable',key='a_chips',vars={val}}
                 return_value.colour = G.C.CHIPS
@@ -77,6 +77,12 @@ function calculate_data_driven_joker(effects, seed, context)
                 return_value.message = localize('$')..val
                 return_value.colour = G.C.MONEY
                 effect_count = effect_count + 1
+            elseif effect.type == "increase_selection_limit" and (context == "joker_added" or "joker_removed") then
+                print("Increasing selection limit by " .. val)
+                G.hand:change_highlighted_limit(val)
+            elseif effect.type == "decrease_selection_limit" and (context == "joker_added" or "joker_removed") then
+                print("Decreasing selection limit by " .. val)
+                G.hand:change_highlighted_limit(-val)
             end
         end
     end

@@ -41,8 +41,33 @@ pattern = '''if self.ability.name ~= 'Seeing Double' and self.ability.x_mult > 1
 position = "before"
 payload = '''if self.ability.data_driven then
     local seed = pseudoseed(self.ability.name or "data_driven")
-    print("Seed:", seed)
-    return calculate_data_driven_joker(self.ability.extra.on_play, seed)
+    return calculate_data_driven_joker(self.ability.extra.on_play, seed, "hand_played")
+end'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = '''if self.ability.name == 'Stuntman' then
+            G.hand:change_size(-self.ability.extra.h_size)
+        end'''
+position = "after"
+payload = '''if self.ability.data_driven then
+    local seed = pseudoseed(self.ability.name or "data_driven")
+    return calculate_data_driven_joker(self.ability.extra.on_obtain, seed, "joker_added")
+end'''
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = '''if self.ability.name == 'Stuntman' then
+            G.hand:change_size(self.ability.extra.h_size)
+        end'''
+position = "after"
+payload = '''if self.ability.data_driven then
+    local seed = pseudoseed(self.ability.name or "data_driven")
+    return calculate_data_driven_joker(self.ability.extra.on_remove, seed, "joker_removed")
 end'''
 match_indent = true
 
@@ -75,6 +100,14 @@ end'''
 match_indent = true
 
 [[patches]]
+[patches.pattern]
+target = "functions/button_callbacks.lua"
+pattern = '''if #G.hand.highlighted <= 0 or G.GAME.blind.block_play or #G.hand.highlighted > 5 then '''
+position = "at"
+payload = '''if #G.hand.highlighted <= 0 or G.GAME.blind.block_play then'''
+match_indent = true
+
+[[patches]]
 [patches.copy]
 target = "game.lua"
 position = "append"
@@ -89,4 +122,12 @@ target = "card.lua"
 position = "append"
 sources = [
     "joker_effects.lua"
+]
+
+[[patches]]
+[patches.copy]
+target = "cardarea.lua"
+position = "append"
+sources = [
+    "cardarea.lua"
 ]

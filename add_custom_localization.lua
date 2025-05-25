@@ -5,6 +5,10 @@ function add_custom_localization(localization)
     localization["misc"]["dictionary"]["b_datapacks"] = "Datapacks"
     localization["misc"]["dictionary"]["b_datapacks_cap"] = "DATAPACKS"
     localization["misc"]["dictionary"]["b_datapacks_small"] = "D"
+
+    -- Custom hands
+    localization["misc"]["poker_hands"]["Six of a Kind"] = "Six of a Kind"
+    localization["misc"]["poker_hand_descriptions"]["Six of a Kind"] = "6 cards with the same rank"
     
     if G and G.P_CENTERS then
         for key, item in pairs(G.P_CENTERS) do
